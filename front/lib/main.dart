@@ -1,115 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      title: 'Flutter Google Maps Demo',
+      home: MapSample(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MapSample extends StatefulWidget {
+  const MapSample({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MapSample> createState() => MapSampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class MapSampleState extends State<MapSample> {
+  late GoogleMapController _mapController;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  final _pageController = PageController(
+    viewportFraction: 0.85, //0.85くらいで端っこに別のカードが見えてる感じになる
+  );
+
+  //初期位置を札幌駅に設定してます
+  final CameraPosition _initialCameraPosition = const CameraPosition(
+    target: LatLng(43.0686606, 141.3485613),
+    zoom: 12,
+  );
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        _mapSection(),
+        _cardSection(),
+      ],
     );
   }
+
+  Widget _mapSection() {
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: _initialCameraPosition,
+      onMapCreated: (GoogleMapController controller) {
+        _mapController = controller;
+      },
+      markers: shops.map(
+        (selectedShop) {
+          return Marker(
+            markerId: MarkerId(selectedShop.uid),
+            position: LatLng(selectedShop.latitude, selectedShop.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+            onTap: () async {
+              //タップしたマーカー(shop)のindexを取得
+              final index = shops.indexWhere((shop) => shop == selectedShop);
+              //タップしたお店がPageViewで表示されるように飛ばす
+              _pageController.jumpToPage(index);
+            },
+          );
+        },
+      ).toSet(),
+    );
+  }
+
+  Widget _cardSection() {
+    return Container(
+      height: 148,
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+      child: PageView(
+        onPageChanged: (int index) async {
+          //スワイプ後のページのお店を取得
+          final selectedShop = shops.elementAt(index);
+          //現在のズームレベルを取得
+          final zoomLevel = await _mapController.getZoomLevel();
+          //スワイプ後のお店の座標までカメラを移動
+          _mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(selectedShop.latitude, selectedShop.longitude),
+                zoom: zoomLevel,
+              ),
+            ),
+          );
+        },
+        controller: _pageController,
+        children: _shopTiles(),
+      ),
+    );
+  }
+
+  List<Widget> _shopTiles() {
+    final _shopTiles = shops.map(
+      (shop) {
+        return Card(
+          child: SizedBox(
+            height: 100,
+            child: Center(
+              child: Text(shop.name),
+            ),
+          ),
+        );
+      },
+    ).toList();
+    return _shopTiles;
+  }
 }
+
+/// お店の情報を持つクラス。マップに表示させるために座標を持たせている
+class Shop {
+  String uid;
+  double latitude;
+  double longitude;
+  String name;
+
+  Shop(this.uid, this.latitude, this.longitude, this.name);
+}
+
+///　北海道の名所
+final shops = [
+  Shop('1', 43.0779575, 141.337819, '北海道大学'),
+  Shop('2', 43.0692162, 141.3473406, '175°DENO坦々麺札幌駅北口店'),
+  Shop('3', 43.05432, 141.3517185, 'UTAGE SAPPORO'),
+  Shop('4', 43.0673817, 141.3416878, 'ラーメン二郎札幌店'),
+  Shop('5', 43.072069, 141.331253, '焼肉と料理シルクロード'),
+];
