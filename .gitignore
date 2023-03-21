@@ -20,4 +20,4 @@ doc/api/
 *.js.deps
 *.js.map
 
-.vscode/launch.json
+.vscode
