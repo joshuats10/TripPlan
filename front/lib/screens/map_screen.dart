@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/attraction_list_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:front/models/tourist_attraction.dart';
 
@@ -34,6 +35,7 @@ class MapSampleState extends State<MapSample> {
       children: [
         _mapSection(),
         _cardSection(),
+        _buttonSection(),
       ],
     );
   }
@@ -64,45 +66,88 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Widget _cardSection() {
-    return Container(
-      height: 148,
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-      child: PageView(
-        onPageChanged: (int index) async {
-          //スワイプ後のページのお店を取得
-          final selectedShop = tourist_attractions.elementAt(index);
-          //現在のズームレベルを取得
-          final zoomLevel = await _mapController.getZoomLevel();
-          //スワイプ後のお店の座標までカメラを移動
-          _mapController.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: LatLng(selectedShop.latitude, selectedShop.longitude),
-                zoom: zoomLevel,
-              ),
+  Widget _buttonSection() {
+    return Positioned(
+      bottom: 164,
+      right: 16.0,
+      child: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AttractionListScreen(),
             ),
           );
         },
-        controller: _pageController,
-        children: _shopTiles(),
+        child: Icon(Icons.list),
       ),
     );
   }
 
-  List<Widget> _shopTiles() {
-    final _shopTiles = tourist_attractions.map(
-      (shop) {
-        return Card(
-          child: SizedBox(
-            height: 100,
-            child: Center(
-              child: Text(shop.name),
-            ),
+  Widget _cardSection() {
+    return Stack(
+      children: [
+        Container(
+          height: 148,
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+          child: PageView(
+            onPageChanged: (int index) async {
+              //スワイプ後のページのお店を取得
+              final selectedShop = tourist_attractions.elementAt(index);
+              //現在のズームレベルを取得
+              final zoomLevel = await _mapController.getZoomLevel();
+              //スワイプ後のお店の座標までカメラを移動
+              _mapController.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target:
+                        LatLng(selectedShop.latitude, selectedShop.longitude),
+                    zoom: zoomLevel,
+                  ),
+                ),
+              );
+            },
+            controller: _pageController,
+            children: _shopTiles(),
           ),
-        );
-      },
-    ).toList();
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _shopTiles() {
+    final _shopTiles = tourist_attractions.map((shop) {
+      return Card(
+        child: Stack(
+          children: [
+            SizedBox(
+              height: 100,
+              child: Center(
+                child: Text(shop.name),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: InkWell(
+                onTap: () {
+                  // TODO: Add onPressed action
+                },
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.add),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
     return _shopTiles;
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/save_screen.dart';
+import 'package:front/widgets/bottom_app_bar.dart';
 
 class RouteStep {
   final String time;
@@ -22,6 +24,10 @@ class RouteScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Route Screen'),
+      ),
+      bottomNavigationBar: const ListScreenBottomBar(
+        buttonText: 'Confirm & Save',
+        nextPage: SaveScreen(title: 'Save Screen'),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),

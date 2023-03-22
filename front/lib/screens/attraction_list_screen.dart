@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/route_screen.dart';
+import 'package:front/widgets/bottom_app_bar.dart';
 
 class AttractionListScreen extends StatelessWidget {
   const AttractionListScreen({super.key});
@@ -8,6 +10,10 @@ class AttractionListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Attraction List Screen'),
+      ),
+      bottomNavigationBar: ListScreenBottomBar(
+        buttonText: 'Optimize Itinerary',
+        nextPage: RouteScreen(),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
