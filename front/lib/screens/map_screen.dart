@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/screens/attraction_list_screen.dart';
+import 'package:front/services/place_api_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:front/models/tourist_attraction.dart';
 
@@ -131,7 +132,7 @@ class MapSampleState extends State<MapSample> {
               right: 10,
               child: InkWell(
                 onTap: () {
-                  // TODO: Add onPressed action
+                  addPlace(shop.name);
                 },
                 child: Container(
                   width: 50,
