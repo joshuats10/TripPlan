@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:front/screens/route_screen.dart';
 import 'package:front/services/place_api_service.dart';

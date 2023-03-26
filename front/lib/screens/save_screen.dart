@@ -30,7 +30,7 @@ class SaveScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text(
-                    'Get your optimal itinerary for your next trip',
+                    'Your itinerary has been saved! Enjoy your trip!',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40.0,

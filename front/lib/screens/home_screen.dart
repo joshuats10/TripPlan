@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/models/tourist_attraction.dart';
 import 'package:front/screens/attraction_list_screen.dart';
 import 'package:front/screens/map_screen.dart';
 import 'package:front/screens/main_form_screen.dart';
 import 'package:front/screens/route_screen.dart';
 import 'package:front/widgets/custom_button.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ButtonData {
   final String title;
@@ -19,7 +21,11 @@ class MyHomePage extends StatelessWidget {
   final String title;
 
   final List<ButtonData> buttons = [
-    ButtonData(title: 'Map Sample', screen: const MapSample()),
+    ButtonData(
+        title: 'Map Sample',
+        screen: MapSample(
+            latlng: LatLng(43.0686606, 141.3485613),
+            touristAttractions: tourist_attractions)),
     ButtonData(title: 'Main Form Screen', screen: const MainFormScreen()),
     ButtonData(title: 'Route Screen', screen: RouteScreen()),
     ButtonData(
