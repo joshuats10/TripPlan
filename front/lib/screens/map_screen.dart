@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:front/constants.dart';
 import 'package:front/screens/attraction_list_screen.dart';
 import 'package:front/services/place_api_service.dart';
+import 'package:front/utils/cache.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:front/models/tourist_attraction.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample(
@@ -30,14 +33,18 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        _mapSection(),
-        _cardSection(),
-        _buttonSection(),
-      ],
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Map Screen'),
+        ),
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            _mapSection(),
+            _cardSection(),
+            _buttonSection(),
+          ],
+        ));
   }
 
   Widget _mapSection() {
@@ -125,9 +132,13 @@ class MapSampleState extends State<MapSample> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: Image.network(
-                'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${spot.photo}&key=$apiKey', // 画像のURLを指定
+              child: CachedNetworkImage(
                 fit: BoxFit.cover,
+                imageUrl:
+                    'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${spot.photo}&key=$apiKey',
+                cacheManager: customCacheManager,
+                placeholder: (context, url) => Image.memory(kTransparentImage),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
             Positioned(
@@ -156,7 +167,14 @@ class MapSampleState extends State<MapSample> {
               right: 10,
               child: InkWell(
                 onTap: () {
-                  addPlace(spot.name);
+                  addPlace(spot.name, spot.photo);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Place added!"),
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.fromLTRB(36, 0, 36, 170),
+                    ),
+                  );
                 },
                 child: Container(
                   width: 50,

@@ -1,7 +1,11 @@
+import 'package:front/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:front/screens/route_screen.dart';
 import 'package:front/services/place_api_service.dart';
+import 'package:front/utils/cache.dart';
 import 'package:front/widgets/bottom_app_bar.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class AttractionListScreen extends StatelessWidget {
   const AttractionListScreen({super.key});
@@ -33,9 +37,15 @@ class AttractionListScreen extends StatelessWidget {
                         children: [
                           AspectRatio(
                             aspectRatio: 16 / 9,
-                            child: Image.network(
-                              'https://picsum.photos/seed/$index/400/300',
+                            child: CachedNetworkImage(
                               fit: BoxFit.cover,
+                              imageUrl:
+                                  'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${places[index]["photo_reference"]}&key=$apiKey',
+                              cacheManager: customCacheManager,
+                              placeholder: (context, url) =>
+                                  Image.memory(kTransparentImage),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                           ),
                           Padding(

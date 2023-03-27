@@ -39,6 +39,9 @@ dependencies:
   google_maps_flutter: ^2.2.5
   flutter_svg: ^1.1.6
   dio: ^5.0.3
+  cached_network_image: ^3.2.3
+  flutter_cache_manager: ^3.3.0
+  transparent_image: ^2.0.1
 
 dev_dependencies:
   flutter_test:

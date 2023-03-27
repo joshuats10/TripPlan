@@ -49,10 +49,10 @@ Future<List<TouristAttraction>> getNearbyPlaces(
   }
 }
 
-Future<void> addPlace(String name) async {
+Future<void> addPlace(String name, String photo_reference) async {
   final dio = Dio();
   final url = 'http://127.0.0.1:8000/api/places/add/';
-  final data = {'name': name};
+  final data = {'name': name, 'photo_reference': photo_reference};
 
   try {
     final response = await dio.post(url, data: data);
