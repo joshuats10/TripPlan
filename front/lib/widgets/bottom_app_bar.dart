@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class ListScreenBottomBar extends StatefulWidget {
   final String buttonText;
   final Widget nextPage;
+  final Null Function()? onPressed;
 
   const ListScreenBottomBar({
     Key? key,
     required this.buttonText,
     required this.nextPage,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,8 @@ class _ListScreenBottomBarState extends State<ListScreenBottomBar> {
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
+                  print(widget.onPressed);
+                  final result = widget.onPressed;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

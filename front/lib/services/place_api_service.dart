@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:front/models/tourist_attraction.dart';
+import 'package:front/providers/places_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 Future<LatLng> getLocationFromText(String text, String apiKey) async {
   final query = Uri.encodeQueryComponent(text);
@@ -41,7 +45,7 @@ Future<List<TouristAttraction>> getNearbyPlaces(
         result['name'],
         result['photos'][0]['photo_reference'],
       );
-      places.add(place);
+      if (result['business_status'] == 'OPERATIONAL') places.add(place);
     }
     return places;
   } else {
@@ -74,5 +78,33 @@ Future<List<Map<String, dynamic>>> getPlaces() async {
   } catch (error) {
     print(error);
     throw Exception('Failed to get places');
+  }
+}
+
+Future<void> optimizePlan(
+    String date, String startTime, String endTime, List<Place> places) async {
+  final cookie = Cookie('device', Uuid().v4()).toString();
+  final dio = Dio();
+  dio.options.headers['Cookie'] = cookie;
+  final url = 'http://127.0.0.1:8000/api/optimize_trip/';
+  final data = {
+    "date": date,
+    "start_time": startTime,
+    "end_time": endTime,
+    "places": places
+        .map((place) => {
+              "place_name": place.place_name,
+              "place_id": place.place_id,
+              "photo_reference": place.photo_reference
+            })
+        .toList()
+  };
+  print('optimized!');
+
+  try {
+    final response = await dio.post(url, data: data);
+    print(response.data);
+  } catch (error) {
+    print(error);
   }
 }

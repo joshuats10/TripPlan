@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front/constants.dart';
+import 'package:front/main.dart';
+import 'package:front/providers/places_provider.dart';
 import 'package:front/screens/attraction_list_screen.dart';
 import 'package:front/services/place_api_service.dart';
 import 'package:front/utils/cache.dart';
@@ -37,14 +40,16 @@ class MapSampleState extends State<MapSample> {
         appBar: AppBar(
           title: const Text('Map Screen'),
         ),
-        body: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            _mapSection(),
-            _cardSection(),
-            _buttonSection(),
-          ],
-        ));
+        body: Consumer(builder: (context, ref, child) {
+          return Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              _mapSection(),
+              _cardSection(ref),
+              _buttonSection(),
+            ],
+          );
+        }));
   }
 
   Widget _mapSection() {
@@ -95,7 +100,7 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Widget _cardSection() {
+  Widget _cardSection(ref) {
     return Stack(
       children: [
         Container(
@@ -119,14 +124,14 @@ class MapSampleState extends State<MapSample> {
               );
             },
             controller: _pageController,
-            children: _spotTiles(),
+            children: _spotTiles(ref),
           ),
         ),
       ],
     );
   }
 
-  List<Widget> _spotTiles() {
+  List<Widget> _spotTiles(ref) {
     final _spotTiles = widget.touristAttractions.map((spot) {
       return Card(
         child: Stack(
@@ -167,7 +172,11 @@ class MapSampleState extends State<MapSample> {
               right: 10,
               child: InkWell(
                 onTap: () {
-                  addPlace(spot.name, spot.photo);
+                  // addPlace(spot.name, spot.photo);
+                  ref.read(placesNotifierProvider).addPlace(Place(
+                      place_id: spot.id,
+                      place_name: spot.name,
+                      photo_reference: spot.photo));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Place added!"),
