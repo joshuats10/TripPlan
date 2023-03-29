@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:front/constants.dart';
+import 'package:front/screens/map_screen.dart';
+import 'package:front/services/place_api_service.dart';
 
 class MainFormScreen extends StatefulWidget {
   const MainFormScreen({super.key});
@@ -23,101 +26,106 @@ class _MyFormState extends State<MainFormScreen> {
       ),
       body: Container(
         padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: ListView(
           children: [
-            const Expanded(
-              child: Text(
-                'Where do you want to explore next?',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40.0,
-                ),
+            const Text(
+              'Where do you want to explore next?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 40.0,
               ),
             ),
-            Expanded(
-                flex: 2,
-                child:
-                    SvgPicture.asset('assets/images/undraw_map_re_60yf.svg')),
-            Expanded(
-              flex: 2,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _destinationController,
-                      decoration: const InputDecoration(
-                        labelText: 'Destination',
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter destination';
-                        }
-                        return null;
-                      },
+            Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SvgPicture.asset('assets/images/undraw_map_re_60yf.svg',
+                    height: 300)),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _destinationController,
+                    decoration: const InputDecoration(
+                      labelText: 'Destination',
                     ),
-                    // const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _dateController,
-                      decoration: const InputDecoration(
-                        labelText: 'Date',
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter date';
-                        }
-                        return null;
-                      },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter destination';
+                      }
+                      return null;
+                    },
+                  ),
+                  // const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _dateController,
+                    decoration: const InputDecoration(
+                      labelText: 'Date',
                     ),
-                    // const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _startTimeController,
-                            decoration: const InputDecoration(
-                              labelText: 'Start Time',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter start time';
-                              }
-                              return null;
-                            },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter date';
+                      }
+                      return null;
+                    },
+                  ),
+                  // const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _startTimeController,
+                          decoration: const InputDecoration(
+                            labelText: 'Start Time',
                           ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter start time';
+                            }
+                            return null;
+                          },
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _endTimeController,
-                            decoration: const InputDecoration(
-                              labelText: 'End Time',
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter end time';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // form is valid, do something here
-                          }
-                        },
-                        child: const Text('Submit'),
                       ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _endTimeController,
+                          decoration: const InputDecoration(
+                            labelText: 'End Time',
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter end time';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          final latlng = await getLocationFromText(
+                              _destinationController.text, apiKey);
+                          final touristAttractions =
+                              await getNearbyPlaces(latlng, apiKey);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapSample(
+                                  latlng: latlng,
+                                  touristAttractions: touristAttractions),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Submit'),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
