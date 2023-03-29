@@ -21,6 +21,10 @@ class Places {
   void addPlace(Place place) {
     places.add(place);
   }
+
+  void deletePlace(Place place) {
+    places.removeWhere((element) => element.place_id == place.place_id);
+  }
 }
 
 class PlacesNotifier extends StateNotifier<Places> {
@@ -28,5 +32,9 @@ class PlacesNotifier extends StateNotifier<Places> {
 
   void addPlace(Place place) {
     state.addPlace(place);
+  }
+
+  void deletePlace(Place place) {
+    state.deletePlace(place);
   }
 }

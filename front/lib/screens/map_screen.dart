@@ -24,6 +24,7 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   late GoogleMapController _mapController;
+  var _savedPlaces = <String>{};
 
   final _pageController = PageController(
     viewportFraction: 0.85, //0.85くらいで端っこに別のカードが見えてる感じになる
@@ -133,6 +134,7 @@ class MapSampleState extends State<MapSample> {
 
   List<Widget> _spotTiles(ref) {
     final _spotTiles = widget.touristAttractions.map((spot) {
+      final alreadySaved = _savedPlaces.contains(spot.id);
       return Card(
         child: Stack(
           children: [
@@ -147,55 +149,96 @@ class MapSampleState extends State<MapSample> {
               ),
             ),
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.white,
-                constraints: BoxConstraints(
-                  minHeight: 68.0, // 最小の高さを指定
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    spot.name,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: InkWell(
-                onTap: () {
-                  // addPlace(spot.name, spot.photo);
-                  ref.read(placesNotifierProvider).addPlace(Place(
-                      place_id: spot.id,
-                      place_name: spot.name,
-                      photo_reference: spot.photo));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Place added!"),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.fromLTRB(36, 0, 36, 170),
-                    ),
-                  );
-                },
+                bottom: 0,
+                left: 0,
+                right: 0,
                 child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.add),
-                ),
-              ),
-            ),
+                    color: Colors.white,
+                    constraints: BoxConstraints(
+                        minHeight: 68.0, maxHeight: 68.0 // 最小の高さを指定
+                        ),
+                    child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Row(children: [
+                          Expanded(
+                              flex: 3,
+                              child: Text(
+                                spot.name,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                          Spacer(),
+                          Expanded(
+                              flex: 1,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  setState(() {
+                                    Place place = Place(
+                                        place_id: spot.id,
+                                        place_name: spot.name,
+                                        photo_reference: spot.photo);
+                                    if (alreadySaved) {
+                                      ref
+                                          .read(placesNotifierProvider)
+                                          .deletePlace(place);
+                                      _savedPlaces.remove(spot.id);
+                                    } else {
+                                      ref
+                                          .read(placesNotifierProvider)
+                                          .addPlace(place);
+                                      _savedPlaces.add(spot.id);
+                                    }
+                                  });
+                                },
+                                shape: CircleBorder(),
+                                child: Icon(
+                                    alreadySaved ? Icons.delete : Icons.add),
+                                color: Colors.orange,
+                                textColor: Colors.white,
+                              ))
+                        ]))))
+
+            //     Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: Text(
+            //         spot.name,
+            //         style: TextStyle(
+            //           fontSize: 16.0,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   bottom: 10,
+            //   right: 10,
+            //   child: InkWell(
+            //     onTap: () {
+            //       var placesRef = ref.read(placesNotifierProvider);
+            //       Place place = Place(
+            //           place_id: spot.id,
+            //           place_name: spot.name,
+            //           photo_reference: spot.photo);
+            //       final alreadySaved = _savedPlaces.contains(place);
+            //       setState(() {
+            //         alreadySaved
+            //             ? placesRef.deletePlace(place)
+            //             : placesRef.addPlace(place);
+            //       });
+            //     },
+            //     child: Container(
+            //       width: 50,
+            //       height: 50,
+            //       decoration: BoxDecoration(
+            //         color: Colors.orange,
+            //         shape: BoxShape.circle,
+            //       ),
+            //       child: Icon(alreadySaved ? Icons.delete : Icons.add),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       );
