@@ -3,11 +3,9 @@ import 'package:front/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:front/main.dart';
-import 'package:front/providers/datetime_provider.dart';
 import 'package:front/screens/route_screen.dart';
 import 'package:front/services/place_api_service.dart';
 import 'package:front/utils/cache.dart';
-import 'package:front/widgets/bottom_app_bar.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class AttractionListScreen extends StatelessWidget {
@@ -25,13 +23,20 @@ class AttractionListScreen extends StatelessWidget {
             title: const Text('Attraction List Screen'),
           ),
           floatingActionButton: FloatingActionButton.extended(
-            elevation: 4.0,
-            icon: const Icon(Icons.send),
-            label: const Text('Get Optimal Trip Plan'),
-            onPressed: () async {
-              optimizePlan(date, startTime, endTime, places);
-            },
-          ),
+              elevation: 4.0,
+              icon: const Icon(Icons.send),
+              label: const Text('Get Optimal Trip Plan'),
+              onPressed: () async {
+                final result =
+                    await optimizePlan(date, startTime, endTime, places);
+                print(result);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RouteScreen(tripId: result),
+                  ),
+                );
+              }),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           bottomNavigationBar: BottomAppBar(
             elevation: 2.0,

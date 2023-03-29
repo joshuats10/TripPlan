@@ -1,22 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:front/providers/places_provider.dart';
+import 'package:front/services/place_api_service.dart';
 
-class ListScreenBottomBar extends StatefulWidget {
+class RouteScreenBottomBar extends StatefulWidget {
   final String buttonText;
   final Widget nextPage;
-  final Null Function()? onPressed;
+  final List? data;
 
-  const ListScreenBottomBar({
+  const RouteScreenBottomBar({
     Key? key,
     required this.buttonText,
     required this.nextPage,
-    this.onPressed,
+    this.data,
   }) : super(key: key);
 
   @override
-  _ListScreenBottomBarState createState() => _ListScreenBottomBarState();
+  _RouteScreenBottomBarState createState() => _RouteScreenBottomBarState();
 }
 
-class _ListScreenBottomBarState extends State<ListScreenBottomBar> {
+class _RouteScreenBottomBarState extends State<RouteScreenBottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -39,8 +42,6 @@ class _ListScreenBottomBarState extends State<ListScreenBottomBar> {
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
-                  print(widget.onPressed);
-                  final result = widget.onPressed;
                   Navigator.push(
                     context,
                     MaterialPageRoute(

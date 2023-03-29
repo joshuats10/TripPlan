@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:front/models/tourist_attraction.dart';
 import 'package:front/providers/places_provider.dart';
+import 'package:front/screens/route_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -81,7 +82,7 @@ Future<List<Map<String, dynamic>>> getPlaces() async {
   }
 }
 
-Future<void> optimizePlan(
+Future<String> optimizePlan(
     String date, String startTime, String endTime, List<Place> places) async {
   final cookie = Cookie('device', const Uuid().v4()).toString();
   final dio = Dio();
@@ -104,6 +105,22 @@ Future<void> optimizePlan(
     final response = await dio.post(url, data: data);
     return response.data['trip_id'];
   } catch (error) {
+    return 'error';
+  }
+}
+
+Future<List<Map<String, dynamic>>> getDestinations(String tripId) async {
+  final dio = Dio();
+  final url = 'http://127.0.0.1:8000/api/get_trip_destinations/$tripId/';
+  await Future.delayed(Duration(seconds: 5));
+
+  try {
+    final Response response = await dio.get(url);
+    final List<Map<String, dynamic>> data =
+        List<Map<String, dynamic>>.from(response.data);
+    return data;
+  } catch (error) {
     print(error);
+    throw Exception('Failed to get places');
   }
 }

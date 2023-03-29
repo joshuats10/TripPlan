@@ -27,7 +27,7 @@ class MyHomePage extends StatelessWidget {
             latlng: LatLng(43.0686606, 141.3485613),
             touristAttractions: tourist_attractions)),
     ButtonData(title: 'Main Form Screen', screen: const MainFormScreen()),
-    ButtonData(title: 'Route Screen', screen: RouteScreen()),
+    ButtonData(title: 'Route Screen', screen: RouteScreen(tripId: '')),
     ButtonData(
         title: 'Attraction List Screen', screen: const AttractionListScreen())
   ];
