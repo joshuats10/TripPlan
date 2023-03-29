@@ -83,7 +83,7 @@ Future<List<Map<String, dynamic>>> getPlaces() async {
 
 Future<void> optimizePlan(
     String date, String startTime, String endTime, List<Place> places) async {
-  final cookie = Cookie('device', Uuid().v4()).toString();
+  final cookie = Cookie('device', const Uuid().v4()).toString();
   final dio = Dio();
   dio.options.headers['Cookie'] = cookie;
   final url = 'http://127.0.0.1:8000/api/optimize_trip/';
@@ -99,11 +99,10 @@ Future<void> optimizePlan(
             })
         .toList()
   };
-  print('optimized!');
 
   try {
     final response = await dio.post(url, data: data);
-    print(response.data);
+    return response.data['trip_id'];
   } catch (error) {
     print(error);
   }

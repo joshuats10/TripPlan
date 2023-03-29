@@ -24,12 +24,31 @@ class AttractionListScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Attraction List Screen'),
           ),
-          bottomNavigationBar: ListScreenBottomBar(
-            buttonText: 'Optimize Itinerary',
-            nextPage: RouteScreen(),
-            onPressed: () {
+          floatingActionButton: FloatingActionButton.extended(
+            elevation: 4.0,
+            icon: const Icon(Icons.send),
+            label: const Text('Get Optimal Trip Plan'),
+            onPressed: () async {
               optimizePlan(date, startTime, endTime, places);
             },
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          bottomNavigationBar: BottomAppBar(
+            elevation: 2.0,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {},
+                )
+              ],
+            ),
           ),
           body: Container(
             padding: const EdgeInsets.all(16.0),

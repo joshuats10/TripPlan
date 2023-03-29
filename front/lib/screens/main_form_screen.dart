@@ -88,201 +88,98 @@ class _MyFormState extends State<MainFormScreen> {
                         return null;
                       },
                     ),
-                    Platform.isAndroid
-                        ? TextFormField(
-                            controller: _dateController,
-                            readOnly: true,
-                            decoration:
-                                const InputDecoration(labelText: 'Date'),
-                            onTap: () async {
-                              DateTime? pickedDate =
-                                  await showPlatformDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now()
-                                          .subtract(const Duration(seconds: 1)),
-                                      lastDate: DateTime(2101));
-                              if (pickedDate != null) {
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                                setState(() {
-                                  _dateController.text = formattedDate;
-                                });
-                              }
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
-                          )
-                        : CupertinoTextFormFieldRow(
-                            controller: _dateController,
-                            prefix: const Text('Date'),
-                            readOnly: true,
-                            placeholder: 'Year/Month/Day',
-                            onTap: () async {
-                              _showDialog(CupertinoDatePicker(
-                                mode: CupertinoDatePickerMode.date,
-                                onDateTimeChanged: (DateTime value) {
-                                  String formattedDate =
-                                      DateFormat('yyyy-MM-dd').format(value);
-                                  setState(() {
-                                    _dateController.text = formattedDate;
-                                  });
-                                },
-                                initialDateTime: DateTime.now(),
-                                minimumDate: DateTime.now()
-                                    .subtract(const Duration(seconds: 1)),
-                                maximumYear: 2100,
-                              ));
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              return null;
-                            },
-                          ),
+                    TextFormField(
+                      controller: _dateController,
+                      readOnly: true,
+                      decoration: const InputDecoration(labelText: 'Date'),
+                      onTap: () async {
+                        DateTime? pickedDate = await showPlatformDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now()
+                                .subtract(const Duration(seconds: 1)),
+                            lastDate: DateTime(2101));
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          setState(() {
+                            _dateController.text = formattedDate;
+                          });
+                        }
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required';
+                        }
+                        return null;
+                      },
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(width: 15.0),
                         Expanded(
                             flex: 1,
-                            child: Platform.isAndroid
-                                ? TextFormField(
-                                    controller: _startTimeController,
-                                    readOnly: true,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Start Time'),
-                                    onTap: () async {
-                                      TimeOfDay? pickedStartTime =
-                                          await showTimePicker(
-                                              context: context,
-                                              initialTime: TimeOfDay.now());
-                                      if (pickedStartTime != null) {
-                                        String formattedTime =
-                                            '${pickedStartTime.hour.toString().padLeft(2, '0')}:${pickedStartTime.minute.toString().padLeft(2, '0')}';
-                                        setState(() {
-                                          _startTimeController.text =
-                                              formattedTime;
-                                        });
-                                      }
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Required';
-                                      }
-                                      return null;
-                                    },
-                                  )
-                                : CupertinoTextFormFieldRow(
-                                    controller: _startTimeController,
-                                    readOnly: true,
-                                    prefix: const Text('Start Time'),
-                                    placeholder: 'HH:MM',
-                                    textAlign: TextAlign.center,
-                                    onTap: () async {
-                                      _showDialog(CupertinoDatePicker(
-                                        mode: CupertinoDatePickerMode.time,
-                                        use24hFormat: true,
-                                        onDateTimeChanged: (DateTime value) {
-                                          String formattedTime =
-                                              DateFormat.Hm().format(value);
-                                          setState(() {
-                                            _startTimeController.text =
-                                                formattedTime;
-                                          });
-                                        },
-                                        initialDateTime: DateTime.now(),
-                                      ));
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Required';
-                                      }
-                                      return null;
-                                    },
-                                  )),
-                        const SizedBox(width: 10.0),
+                            child: TextFormField(
+                              controller: _startTimeController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  labelText: 'Start Time'),
+                              onTap: () async {
+                                TimeOfDay? pickedStartTime =
+                                    await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now());
+                                if (pickedStartTime != null) {
+                                  String formattedTime =
+                                      '${pickedStartTime.hour.toString().padLeft(2, '0')}:${pickedStartTime.minute.toString().padLeft(2, '0')}';
+                                  setState(() {
+                                    _startTimeController.text = formattedTime;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            )),
+                        const SizedBox(
+                          width: 20,
+                        ),
                         Expanded(
                             flex: 1,
-                            child: Platform.isAndroid
-                                ? TextFormField(
-                                    controller: _endTimeController,
-                                    readOnly: true,
-                                    decoration: const InputDecoration(
-                                        labelText: 'End Time',
-                                        hintText: 'HH:MM'),
-                                    onTap: () async {
-                                      TimeOfDay? pickedEndTime =
-                                          await showTimePicker(
-                                              context: context,
-                                              initialTime: TimeOfDay.now());
-                                      if (pickedEndTime != null) {
-                                        String formattedTime =
-                                            '${pickedEndTime.hour.toString().padLeft(2, '0')}:${pickedEndTime.minute.toString().padLeft(2, '0')}';
-                                        setState(() {
-                                          _endTimeController.text =
-                                              formattedTime;
-                                        });
-                                      }
-                                    },
-                                    validator: (value) {
-                                      if (_startTimeController.text != "" &&
-                                          _endTimeController.text != "") {
-                                        if (DateFormat('HH:mm')
-                                            .parse(_startTimeController.text)
-                                            .isAfter(DateFormat('HH:mm').parse(
-                                                _endTimeController.text))) {
-                                          return 'End Time must be after Start Time';
-                                        }
-                                      } else if (value == null ||
-                                          value.isEmpty) {
-                                        return 'Required';
-                                      }
-                                      return null;
-                                    },
-                                  )
-                                : CupertinoTextFormFieldRow(
-                                    controller: _endTimeController,
-                                    readOnly: true,
-                                    prefix: const Text('End Time'),
-                                    placeholder: 'HH:MM',
-                                    textAlign: TextAlign.center,
-                                    onTap: () async {
-                                      _showDialog(CupertinoDatePicker(
-                                          mode: CupertinoDatePickerMode.time,
-                                          use24hFormat: true,
-                                          onDateTimeChanged: (DateTime value) {
-                                            String formattedTime =
-                                                DateFormat.Hm().format(value);
-                                            setState(() {
-                                              _endTimeController.text =
-                                                  formattedTime;
-                                            });
-                                          },
-                                          initialDateTime: DateTime.now()));
-                                    },
-                                    validator: (value) {
-                                      if (_startTimeController.text != "" &&
-                                          _endTimeController.text != "") {
-                                        if (DateFormat('HH:mm')
-                                            .parse(_startTimeController.text)
-                                            .isAfter(DateFormat('HH:mm').parse(
-                                                _endTimeController.text))) {
-                                          return 'End Time must be after Start Time';
-                                        }
-                                      } else if (value == null ||
-                                          value.isEmpty) {
-                                        return 'Required';
-                                      }
-                                      return null;
-                                    },
-                                  )),
-                        const SizedBox(width: 15.0),
+                            child: TextFormField(
+                              controller: _endTimeController,
+                              readOnly: true,
+                              decoration: const InputDecoration(
+                                  labelText: 'End Time', hintText: 'HH:MM'),
+                              onTap: () async {
+                                TimeOfDay? pickedEndTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now());
+                                if (pickedEndTime != null) {
+                                  String formattedTime =
+                                      '${pickedEndTime.hour.toString().padLeft(2, '0')}:${pickedEndTime.minute.toString().padLeft(2, '0')}';
+                                  setState(() {
+                                    _endTimeController.text = formattedTime;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (_startTimeController.text != "" &&
+                                    _endTimeController.text != "") {
+                                  if (DateFormat('HH:mm')
+                                      .parse(_startTimeController.text)
+                                      .isAfter(DateFormat('HH:mm')
+                                          .parse(_endTimeController.text))) {
+                                    return 'End Time must be after Start Time';
+                                  }
+                                } else if (value == null || value.isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            )),
                       ],
                     ),
                     const SizedBox(height: 32),
@@ -300,6 +197,7 @@ class _MyFormState extends State<MainFormScreen> {
                             print(
                                 ref.read(itineraryNotifierProvider).startTime);
                             print(ref.read(itineraryNotifierProvider).endTime);
+                            print(apiKey);
                             final latlng = await getLocationFromText(
                                 _destinationController.text, apiKey);
                             final touristAttractions =
