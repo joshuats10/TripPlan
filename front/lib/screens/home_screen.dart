@@ -20,17 +20,9 @@ class MyHomePage extends StatelessWidget {
 
   final String title;
 
-  final List<ButtonData> buttons = [
-    ButtonData(
-        title: 'Map Sample',
-        screen: MapSample(
-            latlng: LatLng(43.0686606, 141.3485613),
-            touristAttractions: tourist_attractions)),
-    ButtonData(title: 'Main Form Screen', screen: const MainFormScreen()),
-    ButtonData(title: 'Route Screen', screen: RouteScreen(tripId: '')),
-    ButtonData(
-        title: 'Attraction List Screen', screen: const AttractionListScreen())
-  ];
+  // final List<ButtonData> buttons = [
+  //   ButtonData(title: 'Get Started', screen: const MainFormScreen()),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,52 +32,50 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Container(
         padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 1,
-              child:
-                  SvgPicture.asset('assets/images/undraw_journey_re_ec5q.svg'),
-            ),
-            const Expanded(
-              flex: 1,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Get your optimal itinerary for your next trip',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40.0,
-                    ),
-                    textAlign: TextAlign.center,
+        margin: const EdgeInsets.only(top: 40.0),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+            flex: 2,
+            child: SvgPicture.asset('assets/images/undraw_journey_re_ec5q.svg'),
+          ),
+          const Expanded(
+            flex: 2,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Get your optimal itinerary for your next trip',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40.0,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: ListView.builder(
-                itemCount: buttons.length,
-                itemBuilder: (context, index) {
-                  final button = buttons[index];
-                  return CustomButton(
+          ),
+          Expanded(
+            flex: 1,
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  height: 48,
+                  width: 160,
+                  child: CustomButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => button.screen,
+                          builder: (context) => const MainFormScreen(),
                         ),
                       );
                     },
-                    buttonText: button.title,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                    buttonText: 'Get Started',
+                  ),
+                )),
+          )
+        ]),
       ),
     );
   }

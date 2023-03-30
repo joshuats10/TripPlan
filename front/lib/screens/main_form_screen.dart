@@ -184,7 +184,16 @@ class _MyFormState extends State<MainFormScreen> {
                     ),
                     const SizedBox(height: 32),
                     Center(
+                        child: SizedBox(
+                      width: 150,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          textStyle:
+                              const TextStyle(fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             ref
@@ -193,11 +202,6 @@ class _MyFormState extends State<MainFormScreen> {
                                     _dateController.text,
                                     _startTimeController.text,
                                     _endTimeController.text);
-                            print(ref.read(itineraryNotifierProvider).date);
-                            print(
-                                ref.read(itineraryNotifierProvider).startTime);
-                            print(ref.read(itineraryNotifierProvider).endTime);
-                            print(apiKey);
                             final latlng = await getLocationFromText(
                                 _destinationController.text, apiKey);
                             final touristAttractions =
@@ -214,7 +218,7 @@ class _MyFormState extends State<MainFormScreen> {
                         },
                         child: const Text('Submit'),
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),

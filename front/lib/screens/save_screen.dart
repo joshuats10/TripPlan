@@ -42,9 +42,11 @@ class SaveScreen extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: SizedBox(
-                  height: 32,
+                  height: 48,
+                  width: 160,
                   child: CustomButton(
                     onPressed: () {
                       Navigator.push(
