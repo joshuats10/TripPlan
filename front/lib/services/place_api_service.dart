@@ -87,7 +87,7 @@ Future<String> optimizePlan(
   final cookie = Cookie('device', const Uuid().v4()).toString();
   final dio = Dio();
   dio.options.headers['Cookie'] = cookie;
-  final url = 'http://127.0.0.1:8000/api/optimize_trip/';
+  final url = 'http://127.0.0.1:8000/api/v0/optimize_trip/';
   final data = {
     "date": date,
     "start_time": startTime,
@@ -111,7 +111,7 @@ Future<String> optimizePlan(
 
 Future<List<Map<String, dynamic>>> getDestinations(String tripId) async {
   final dio = Dio();
-  final url = 'http://127.0.0.1:8000/api/get_trip_destinations/$tripId/';
+  final url = 'http://127.0.0.1:8000/api/v0/get_trip_destinations/$tripId/';
   await Future.delayed(Duration(seconds: 5));
 
   try {
