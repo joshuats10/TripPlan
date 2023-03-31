@@ -1,5 +1,8 @@
 # TripPlan
 
+Mobile application developed using Flutter framework to create a trip plan. \
+Communicate with an [API](https://github.com/joshuats10/TripPlan-Backend-API) to process the data and receive the processed data.
+
 ## Setup
 
 1. Install the Flutter SDK by following the steps here.Run the following command in your terminal to install the project dependencies:
@@ -8,7 +11,7 @@
    flutter pub get
    ```
 
-1. Setting up `launch.json` for flutter application
+1. Setting up `.vscode/launch.json` for flutter application
 
    Below is an example launch.json file for a Flutter application in Visual Studio Code. This configuration file is used to launch the application in debug mode. In this configuration, the `--dart-define` option is used to set the API_KEY for Google Maps.
 
@@ -51,7 +54,7 @@
 
 1. Run the following command in your terminal to build the app:
    ```
-   flutter build
+   flutter build front --dart-define="API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE"
    ```
 1. To run the app, run the following command:
    ```
